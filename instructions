@@ -1,0 +1,21 @@
+USER JOURNEY
+The user arrives at a weather dashboard featuring a search form and an interactive
+map. They enter a city name (e.g., "Paris") and select their preferred unit (Celsius or
+Fahrenheit) using a toggle. Upon submitting the form, the dashboard displays the
+current weather (temperature, humidity, wind speed, and conditions) along with a 3-day
+forecast graph. Simultaneously, the map zooms to the searched location and displays a
+marker with the current temperature. Users can also click on the map to explore
+weather for other locations—clicking a point updates the search form and refreshes the
+weather data. Once familiar with the manual search, users can optionally use the
+chatbot, which guides them through the process conversationally, auto-filling the form
+and refreshing the map and weather data seamlessly.
+TECHNICAL REQUIREMENTS
+● Angular 19 (Prefer standalone components without modules. Use signals wherever
+applicable. Prefer built-in control flow blocks instead of structural directives)
+● Angular material (for UI Components)
+● Ngrx (for state management)
+● Build custom form controls if required
+● Use any free Weather API of your choice
+● Prefer highcharts library for any charts. (Chartjs can be second option)
+● Prefer mapbox library for maps. (Google Maps can be second option)
+● Unit test cases with 80% code coverage
