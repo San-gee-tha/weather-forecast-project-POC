@@ -2,6 +2,7 @@ export interface DayForecast {
   date: string;
   minTemp: number;
   maxTemp: number;
+  tempUnit: string; 
   minRealFeel: number;
   maxRealFeel: number;
   dayPhrase: string;

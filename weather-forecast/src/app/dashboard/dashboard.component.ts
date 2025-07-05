@@ -62,6 +62,7 @@ export class DashboardComponent implements OnDestroy {
       date: day.Date,
       minTemp: day.Temperature?.Minimum?.Value,
       maxTemp: day.Temperature?.Maximum?.Value,
+      tempUnit: day.Temperature?.Minimum?.Unit,
       minRealFeel: day.RealFeelTemperature?.Minimum?.Value,
       maxRealFeel: day.RealFeelTemperature?.Maximum?.Value,
       dayPhrase: day.Day?.IconPhrase,
@@ -78,8 +79,8 @@ export class DashboardComponent implements OnDestroy {
         unit: day.Night?.Wind?.Speed?.Unit,
         direction: day.Night?.Wind?.Direction?.English
       },
-      humidityDay: day.Day?.RelativeHumidity,
-      humidityNight: day.Night?.RelativeHumidity
+      humidityDay: day.Day?.RelativeHumidity.Average,
+      humidityNight: day.Night?.RelativeHumidity.Average
     };
   }
 

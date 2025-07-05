@@ -1,4 +1,39 @@
-.forecast-container{
-    border-radius: 3%;
-    ;
+.forecast-container {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem;
+  margin: 1rem 0;
+  font-size: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 25rem;
+}
+
+.day-text {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #1976d2;
+  margin-bottom: 0.2rem;
+}
+
+.date {
+  font-size: 1.1rem;
+  color: #555;
+  margin-bottom: 0.5rem;
+}
+
+.city-text {
+  font-size: 1.1rem;
+  color: #333;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.forecast-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
 }
