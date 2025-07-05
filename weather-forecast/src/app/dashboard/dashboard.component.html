@@ -1,0 +1,13 @@
+<div class="dashboard-wrapper">
+    <div [class.dashboard-content]="currentConditions">
+        <h1 class="dashboard-title">Weather Forecast Dashboard</h1>
+        <div class="dashboard-row" [class.dashboard-center]="!currentConditions">
+            <div class="search-content">
+                <app-search></app-search>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="currentConditions">
+        <app-current-day-forecast [forecast]="currentConditions"></app-current-day-forecast>
+    </div>
+</div>

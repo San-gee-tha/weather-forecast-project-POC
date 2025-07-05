@@ -1,0 +1,19 @@
+.search-container {
+  align-items: center;
+  padding: .5rem 1rem;
+  border-radius: 3%;
+  display: flex;
+}
+
+.search-field {
+  flex: 1 1 300px;
+  min-width: 300px;
+}
+
+mat-slide-toggle {
+  margin: 0 1rem;
+}
+
+button {
+  margin-left: 1rem;
+}
