@@ -8,9 +8,9 @@ export const selectSelectedCity = createSelector(
   (state) => state.selectedCity
 );
 
-export const selectSelectedUnit = createSelector(
+export const selectSelectedUnitandCity = createSelector(
   selectAppState,
-  (state) => state.selectedUnit
+  (state) => { return {unit : state.selectedUnit, city: state.selectedCity} }// Return both selected unit and city
 );
 
 export const selectCurrentConditions = createSelector(

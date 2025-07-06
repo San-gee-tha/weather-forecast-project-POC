@@ -7,7 +7,13 @@
             </div>
         </div>
     </div>
-    <div *ngIf="currentConditions">
-        <app-current-day-forecast [forecast]="currentConditions"></app-current-day-forecast>
+    <div *ngIf="currentConditions" class="forecast">
+        <div class="cards">>
+            <app-current-day-forecast [forecast]="currentConditions"
+                [next3days]="conditions"></app-current-day-forecast>
+        </div>
+        <div class="map-container">
+            <app-map></app-map>
+        </div>
     </div>
 </div>

@@ -9,6 +9,6 @@ export interface AppState {
 
 export const initialAppState: AppState = {
   selectedCity: null,
-  selectedUnit: unitType.METRIC,
+  selectedUnit: unitType.IMPERIAL,
   currentConditions: null
 };

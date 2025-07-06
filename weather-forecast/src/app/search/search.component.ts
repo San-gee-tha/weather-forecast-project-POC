@@ -12,7 +12,8 @@ import { MatOptionModule } from '@angular/material/core';
 import { WeatherApiService } from '../weather-api.service';
 import { CommonModule } from '@angular/common';
 import { debounceTime, distinctUntilChanged, filter } from 'rxjs/operators';
-import { updateCity } from '../state/app.actions';
+import { updateCity, updateUnit } from '../state/app.actions';
+import { selectSelectedCity } from '../state/app.selectors';
 
 
 @Component({
@@ -37,11 +38,18 @@ export class SearchComponent {
 
   // @Output() citySelected = new EventEmitter<{ city: citiesModal, unit: unitType }>();
 
-  constructor(private weatherApiService: WeatherApiService, private store: Store) { }
+  constructor(private weatherApiService: WeatherApiService, private store: Store) {
+    // Listen for city updates from the store and update the form control
+    this.store.select(selectSelectedCity).subscribe(city => {
+      if (city && city.name) {
+        this.city.setValue(city.name, { emitEvent: false });
+      }
+    });
+  }
 
 
   onSelectCity(city: citiesModal) {
-    this.city.setValue(city.name);
+    // this.city.setValue(city.name);
     this.store.dispatch(updateCity({ city }));
     this.citiesFetched = []; // Clear the fetched cities after selection
   }
@@ -82,5 +90,11 @@ export class SearchComponent {
 
   trackById(index: number, item: citiesModal) {
     return item.key; // or any unique identifier for the item
+  }
+
+  updateUnit(event: any) {
+    debugger
+    this.unitToggle.setValue(event.checked ? unitType.IMPERIAL : unitType.METRIC);
+    this.store.dispatch(updateUnit({ unit: this.unitToggle.value }));
   }
 }

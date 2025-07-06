@@ -12,7 +12,7 @@
     </mat-form-field>
 
     <mat-slide-toggle color="primary" [formControl]="unitToggle" [checked]="unitToggle.value === unitType.IMPERIAL"
-        (change)="unitToggle.setValue($event.checked ? unitType.IMPERIAL : unitType.METRIC)">
+        (change)="updateUnit($event)">
         {{ unitToggle.value === unitType.IMPERIAL ? 'Fahrenheit' : 'Celsius' }}
     </mat-slide-toggle>
 

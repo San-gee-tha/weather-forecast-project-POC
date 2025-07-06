@@ -22,3 +22,9 @@ export interface DayForecast {
   humidityDay: any;
   humidityNight: any;
 }
+
+
+export interface geoLocation{
+  latitude: number;
+  longitude: number;
+}

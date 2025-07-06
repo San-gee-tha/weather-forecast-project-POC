@@ -1,17 +1,17 @@
 @if(date){
 <div class="mat-elevation-z4 forecast-container">
     <div class="day-text">{{date.day}}</div>
-    <div class="date">{{date.month}} , {{date.dayNumber}}</div>
+    <div class="date">{{date.month}} ,{{date.dayNumber}}</div>
     <span class="city-text">{{cityName}}</span>
     <div class="forecast-details">
         <table>
             <tr>
                 <td>MAX TEMP</td>
-                <td>{{forecast?.maxTemp}} {{forecast?.tempUnit}}</td>
+                <td>{{forecast?.maxTemp}}&deg;{{forecast?.tempUnit}}</td>
             </tr>
             <tr>
                 <td>MIN TEMP</td>
-                <td>{{forecast?.minTemp}}  {{forecast?.tempUnit}}</td>
+                <td>{{forecast?.minTemp}}&deg;{{forecast?.tempUnit}}</td>
             </tr>
             <tr>
                 <td>HUMIDITY</td>
@@ -23,5 +23,11 @@
             </tr>
         </table>
     </div>
+</div>
+
+<br>
+<div class="mat-elevation-z4 forecast-container">
+    <div class="day-text">3 days temperature forecast</div>
+    <canvas #tempChart></canvas>
 </div>
 }
