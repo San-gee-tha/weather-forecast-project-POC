@@ -13,7 +13,7 @@ import { WeatherApiService } from '../weather-api.service';
 import { CommonModule } from '@angular/common';
 import { debounceTime, distinctUntilChanged, filter } from 'rxjs/operators';
 import { updateCity, updateUnit } from '../state/app.actions';
-import { selectSelectedCity } from '../state/app.selectors';
+import { selectSelectedCity, selectSelectedUnit } from '../state/app.selectors';
 
 
 @Component({
@@ -43,6 +43,12 @@ export class SearchComponent {
     this.store.select(selectSelectedCity).subscribe(city => {
       if (city && city.name) {
         this.city.setValue(city.name, { emitEvent: false });
+      }
+    });
+
+    this.store.select(selectSelectedUnit).subscribe(unit => {
+      if (unit) {
+        this.unitToggle.setValue(unit, { emitEvent: false });
       }
     });
   }
@@ -93,7 +99,6 @@ export class SearchComponent {
   }
 
   updateUnit(event: any) {
-    debugger
     this.unitToggle.setValue(event.checked ? unitType.IMPERIAL : unitType.METRIC);
     this.store.dispatch(updateUnit({ unit: this.unitToggle.value }));
   }

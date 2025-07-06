@@ -9,11 +9,12 @@
     </div>
     <div *ngIf="currentConditions" class="forecast">
         <div class="cards">>
-            <app-current-day-forecast [forecast]="currentConditions"
-                [next3days]="conditions"></app-current-day-forecast>
+            <app-day-forecast [forecast]="currentConditions"
+                [next3days]="conditions"></app-day-forecast>
         </div>
         <div class="map-container">
             <app-map></app-map>
         </div>
     </div>
+  <app-chatbot class="floating-chatbot"></app-chatbot>
 </div>

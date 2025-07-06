@@ -18,12 +18,13 @@ import { updateCity } from '../state/app.actions';
 export class MapComponent implements AfterViewInit {
     @ViewChild('mapContainer', { static: false }) mapContainer!: ElementRef<HTMLDivElement>;
     map: any;
-    accessToken: string = 'pk.eyJ1Ijoic2FuZ2VldGhhLW5hZ3UiLCJhIjoiY21jcWl6cTN6MGdwbDJpczRrOW1uZ2ZpbSJ9.y0tg-nPOYyqNcH6u_P2nAw'; // Replace with your Mapbox token
+    accessToken: string = 'pk.eyJ1IjoiZGlsbHBpeGVsIiwiYSI6ImNqM3A1YWV4czAwa3cyd3BmeWR4OTJ4NGEifQ.atNs-3fdoNghDcrdKwtIkA'
+    // accessToken: string = 'pk.eyJ1Ijoic2FuZ2VldGhhLW5hZ3UiLCJhIjoiY21jcWl6cTN6MGdwbDJpczRrOW1uZ2ZpbSJ9.y0tg-nPOYyqNcH6u_P2nAw'; // Replace with your Mapbox token mine
     isBrowser: boolean;
     private actionsSub: Subscription;
-    mapConfig = signal<geoLocation>({latitude: 0, longitude: 0})
+    mapConfig = signal<geoLocation>({ latitude: 0, longitude: 0 })
 
-    
+
 
     constructor(@Inject(PLATFORM_ID) private platformId: Object,
         private weatherApiService: WeatherApiService,
@@ -53,33 +54,6 @@ export class MapComponent implements AfterViewInit {
         }
     }
 
-    // ngOnChanges() {
-    //     if (
-    //         this.map &&
-    //         this.config != null &&
-    //         typeof this.config.lon === 'number' &&
-    //         typeof this.config.lat === 'number'
-    //     ) {
-    //         const lon = this.config.lon;
-    //         const lat = this.config.lat;
-    //         let coords: [number, number] = [lon, lat];
-    //         this.map.setCenter(coords);
-    //         // Remove existing markers if needed, then add new marker
-    //         if (this.mapMarker) {
-    //             this.mapMarker.remove();
-    //         }
-    //         import('mapbox-gl').then((mapboxgl) => {
-    //             this.mapMarker = new mapboxgl.Marker().setLngLat(coords).addTo(this.map);
-    //         });
-    //     } else if (
-    //         this.config != null &&
-    //         typeof this.config.lon === 'number' &&
-    //         typeof this.config.lat === 'number'
-    //     ) {
-    //         this.initializeMap();
-    //     }
-    // }
-
     mapMarker: any;
     updateOrInitMap() {
         if (
@@ -93,13 +67,7 @@ export class MapComponent implements AfterViewInit {
             if (this.map) {
                 // Map already initialized, just update center and marker
                 this.map.setCenter(coords);
-                if (this.mapMarker) {
-                    this.mapMarker.setLngLat(coords);
-                } else {
-                    import('mapbox-gl').then((mapboxgl) => {
-                        this.mapMarker = new mapboxgl.Marker().setLngLat(coords).addTo(this.map);
-                    });
-                }
+                this.map.setZoom(5); // Adjust zoom level as needed
             } else {
                 import('mapbox-gl').then((mapboxgl) => {
                     this.map = new mapboxgl.Map({
@@ -107,18 +75,15 @@ export class MapComponent implements AfterViewInit {
                         container: this.mapContainer.nativeElement,
                         style: 'mapbox://styles/mapbox/streets-v11',
                         center: coords,
-                        zoom: 3
+                        zoom: 4
                     });
-                    this.mapMarker = new mapboxgl.Marker().setLngLat(coords).addTo(this.map);
-                    // Add click event to fetch geo location
                     this.map.on('click', (e: any) => {
                         const lngLat = e.lngLat;
-                        // Optionally, update marker position
-                        this.mapMarker.setLngLat([lngLat.lng, lngLat.lat]);
-                        // Fetch geo location (reverse geocode or custom logic)
                         this.fetchGeoLocationFromCoords(lngLat.lat, lngLat.lng);
                     });
                 });
+
+
             }
         }
     }
@@ -135,7 +100,7 @@ export class MapComponent implements AfterViewInit {
                     country: geoData.Country.LocalizedName,
                     administrativeArea: geoData.AdministrativeArea.LocalizedName
                 }
-                this.store.dispatch(updateCity({city}));
+                this.store.dispatch(updateCity({ city }));
             })
     }
 }

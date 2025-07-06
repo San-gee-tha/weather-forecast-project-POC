@@ -9,13 +9,13 @@ import { MatIconModule } from '@angular/material/icon';
 import Chart from 'chart.js/auto';
 
 @Component({
-    selector: 'app-current-day-forecast',
+    selector: 'app-day-forecast',
     standalone: true,
     imports: [CommonModule, MatIconModule],
-    templateUrl: './current-day-forecast.component.html',
-    styleUrls: ['./current-day-forecast.component.scss']
+    templateUrl: './day-forecast.component.html',
+    styleUrls: ['./day-forecast.component.scss']
 })
-export class CurrentDayForecastComponent implements OnInit, AfterViewInit {
+export class DayForecastComponent implements OnInit, AfterViewInit {
     @Input() forecast: DayForecast | null = null;
     @Input() next3days: DayForecast[] = [];
     cityName: string | null = null;

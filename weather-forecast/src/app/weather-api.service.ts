@@ -8,14 +8,16 @@ import { Observable, of } from 'rxjs';
 export class WeatherApiService {
 
     apiKey = 'UYCWyIoAI1LGtDLUuBGNk5ybKoDPtUVi'
+    baseUrl = 'https://dataservice.accuweather.com/';
     // apiKey = 'y3cHc0GRaG5qnFWVbKGenOtv4khdhiMx' //mine
+
 
     constructor(private http: HttpClient) { }
 
     getCity(city: string): Observable<any> {
         console.log('getCity called with city:', city);
-        // const url = `https://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey=${this.apiKey}&q=${encodeURIComponent(city)}`;
-        // return this.http.get(url);
+        const url = `${this.baseUrl}locations/v1/cities/autocomplete?apikey=${this.apiKey}&q=${encodeURIComponent(city)}`;
+        return this.http.get(url);
         return of([
             {
                 "Version": 1,
@@ -82,8 +84,8 @@ export class WeatherApiService {
 
     getForecastFor5days(cityKey: number, unit: string): Observable<any> {
         console.log('getForecastFor5days called with cityKey:', cityKey, 'and unit:', unit);
-        // const url = `https://dataservice.accuweather.com/forecasts/v1/daily/5day/${cityKey}?apikey=${this.apiKey}&details=true&metric=${unit === 'metric'}`;
-        // return this.http.get(url);
+        const url = `${this.baseUrl}forecasts/v1/daily/5day/${cityKey}?apikey=${this.apiKey}&details=true&metric=${unit === 'metric'}`;
+        return this.http.get(url);
         return of({
             "Headline": {
                 "EffectiveDate": "2025-07-05T13:00:00+05:30",
@@ -1786,8 +1788,8 @@ export class WeatherApiService {
 
     getGeoLocation(cityKey: number): Observable<any> {
         console.log('getGeoLocation called with cityKey:', cityKey);
-        // const url = `http://dataservice.accuweather.com/locations/v1/${cityKey}?apikey=${this.apiKey}`; // Replace with actual geolocation API URL
-        // return this.http.get(url);
+        const url = `${this.baseUrl}locations/v1/${cityKey}?apikey=${this.apiKey}`; // Replace with actual geolocation API URL
+        return this.http.get(url);
         return of(
             {
                 "Version": 1,
@@ -1862,8 +1864,8 @@ export class WeatherApiService {
 
     getReverseGeoLocation(latitude: number, longitude: number): Observable<any> {
         console.log('getReverseGeoLocation called with latitude:', latitude, 'and longitude:', longitude);
-        // const url = `http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=${this.apiKey}&q=${latitude},${longitude}`;
-        // return this.http.get(url);
+        const url = `${this.baseUrl}locations/v1/cities/geoposition/search?apikey=${this.apiKey}&q=${latitude},${longitude}`;
+        return this.http.get(url);
         return of({
             "Version": 1,
             "Key": "206671",

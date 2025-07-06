@@ -8,6 +8,12 @@ export const selectSelectedCity = createSelector(
   (state) => state.selectedCity
 );
 
+export const selectSelectedUnit = createSelector(
+  selectAppState,
+  (state) => state.selectedUnit
+);
+
+
 export const selectSelectedUnitandCity = createSelector(
   selectAppState,
   (state) => { return {unit : state.selectedUnit, city: state.selectedCity} }// Return both selected unit and city

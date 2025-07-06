@@ -1,0 +1,37 @@
+<div class="forcast-wrapper">
+    @if(date){
+    <div class="mat-elevation-z4 forecast-container" #curentDayForecast>
+        <div class="day-text">{{date.day}}</div>
+        <div class="date">{{date.month}} ,{{date.dayNumber}}</div>
+        <span class="city-text">{{cityName}}</span>
+        <div class="forecast-details">
+            <div> {{forecast?.headLine}}</div>
+            <table>
+                <tr>
+                    <td>MAX TEMP</td>
+                    <td>{{forecast?.maxTemp}}&deg;{{forecast?.tempUnit}}</td>
+                </tr>
+                <tr>
+                    <td>MIN TEMP</td>
+                    <td>{{forecast?.minTemp}}&deg;{{forecast?.tempUnit}}</td>
+                </tr>
+                <tr>
+                    <td>HUMIDITY</td>
+                    <td>{{forecast?.humidityDay}} %</td>
+                </tr>
+                <tr>
+                    <td>WIND SPEED</td>
+                    <td>{{forecast?.windDay?.speed}}{{forecast?.windDay?.unit}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="mat-elevation-z4 forecast-container">
+        <div class="day-text">3 days weather forecast</div>
+        <canvas #tempChart></canvas>
+
+
+    </div>
+    }
+</div>

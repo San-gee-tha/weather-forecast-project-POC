@@ -1,0 +1,32 @@
+<div class="chatbot-fab" *ngIf="collapsed" (click)="toggleCollapse()">
+  <span>💬</span>
+</div>
+<div class="chatbot-container" *ngIf="!collapsed">
+  <div class="chatbot-header">
+    Weather Assistant
+    <button class="close-btn" (click)="toggleCollapse()" title="Close">×</button>
+  </div>
+  <div class="chatbot-messages" #chatMessages>
+    <div *ngFor="let msg of messages" [ngClass]="msg.from">
+      <span>{{msg.text}}</span>
+      <div class="timestamp">{{msg.timestamp | date:'HH:mm'}}</div>
+      <div *ngIf="msg.cities">
+        <button *ngFor="let city of msg.cities" class="city-button" (click)="sendMessage(city, 'city')">
+          {{city.name}}, {{city.country}}
+        </button>
+      </div>
+      <div *ngIf="msg.text === 'Do you prefer Celsius or Fahrenheit?' && chatState === 'askUnit'">
+        <label>
+          <input type="radio" name="unit" value="metric" (change)="sendMessage('Celsius' , 'unit')"> Celsius
+        </label>
+        <label style="margin-left: 1em;">
+          <input type="radio" name="unit" value="imperial" (change)="sendMessage('Fahrenheit', 'unit')"> Fahrenheit
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="chatbot-input">
+    <input [(ngModel)]="userInput" (keyup.enter)="sendMessage()" placeholder="Ask me about the weather..." />
+    <button (click)="sendMessage()">Send</button>
+  </div>
+</div>
