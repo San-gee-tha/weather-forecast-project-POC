@@ -1,59 +1,70 @@
-# WeatherForecast
+# Weather Forecast Angular Application
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.15.
+## Features
+- Client-side rendered Angular 19+ application
+- Weather forecast, city search, map integration (Mapbox), and chatbot
+- State management with NgRx
+- Material UI feedback (snackbar, autocomplete)
 
-## Development server
+## Prerequisites
+- Node.js (v18 or newer recommended)
+- npm (v9 or newer recommended)
+- Mapbox API key (see `src/app/api-keys.ts`)
+- AccuWeather API key (see `src/app/api-keys.ts`)
 
-To start a local development server, run:
+## Setup
+1. **Install dependencies:**
+   ```sh
+   npm install
+   ```
 
-```bash
-ng serve
-```
+2. **Configure API Keys:**
+   - Edit `src/app/api-keys.ts` and set your Mapbox and AccuWeather API keys.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+3. **Run the application locally:**
+   - Start the development server:
+     ```sh
+     npm start
+     ```
+   - Open your browser and go to [http://localhost:4200](http://localhost:4200)
 
-## Code scaffolding
+4. **Build for production:**
+   ```sh
+   npm run build
+   ```
+   - The production build output will be in `dist/weather-forecast/browser`.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+5. **Deploy to Firebase Hosting:**
+   - Make sure Firebase CLI is installed and initialized.
+   - Run:
+     ```sh
+     firebase deploy --only hosting
+     ```
 
-```bash
-ng generate component component-name
-```
+## Notes
+- This app is **client-side rendered** (CSR). No server-side rendering is used.
+- For map features, ensure your Mapbox key is valid and has the correct permissions.
+- For weather data, ensure your AccuWeather key is valid and has API access.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Troubleshooting
+- If you see errors about missing API keys, check `src/app/api-keys.ts`.
+- If map is not loading, check browser console for Mapbox errors and verify your key.
+- For Material UI issues, ensure `@angular/material` and `@angular/animations` are installed.
 
-```bash
-ng generate --help
-```
+## Testing
+- Run unit tests with:
+  ```sh
+  npm test
+  ```
 
-## Building
+## Project Structure
+- `src/app/` — Main Angular app code
+- `src/app/map/` — Map component (Mapbox integration)
+- `src/app/state/` — NgRx state management
+- `src/app/weather-api.service.ts` — Weather API integration
+- `src/app/api-keys.ts` — API keys (do not commit real secrets)
 
-To build the project run:
+---
+For further help, see the README.md or contact the project maintainer.
 
-```bash
-ng build
-```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
