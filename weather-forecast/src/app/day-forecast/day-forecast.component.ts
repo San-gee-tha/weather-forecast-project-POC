@@ -36,14 +36,30 @@ export class DayForecastComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
+    ngOnChanges() {
+        if (this.chart) {
+            this.chart.destroy();
+            this.chart = null;
+        }
+        setTimeout(() => {
+        this.configureChart();
+        }, 0)
+    }
+
     ngAfterViewInit() {
         // Use setTimeout to ensure the canvas is available after view init
         setTimeout(() => {
-            if (this.next3days && this.next3days.length > 0 && this.tempChartRef) {
+          this.configureChart()
+        }, 0);
+    }
+
+    configureChart(){
+          if (this.next3days && this.next3days.length > 0 && this.tempChartRef) {
                 const labels = this.next3days.map((d, i) => fetchDateAndDay(d.date).day + ' ' + fetchDateAndDay(d.date).dayNumber);
                 const maxTemps = this.next3days.map(d => d.maxTemp);
                 const minTemps = this.next3days.map(d => d.minTemp);
                 const Humidity = this.next3days.map(d => d.humidityDay);
+                console.log(maxTemps, minTemps, Humidity)
                 this.chart = new Chart(this.tempChartRef.nativeElement, {
                     type: 'line',
                     data: {
@@ -115,7 +131,6 @@ export class DayForecastComponent implements OnInit, AfterViewInit, OnDestroy {
                     }
                 });
             }
-        }, 0);
     }
 
     ngOnDestroy() {
