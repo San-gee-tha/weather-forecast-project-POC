@@ -1892,6 +1892,7 @@ export class SearchComponentStub { }
 export class DayForecastComponentStub {
     @Input() next3days: any[] = [];
     @Input() forecast: any | null = null;
+    @Input() headLine :  string = ''
 }
 
 @Component({

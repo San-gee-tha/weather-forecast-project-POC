@@ -21,7 +21,6 @@ export interface DayForecast {
   };
   humidityDay: any;
   humidityNight: any;
-  headLine?: string
 }
 
 

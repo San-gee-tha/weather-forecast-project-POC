@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, AfterViewInit, ElementRef, ViewChild, Inject, signal } from '@angular/core';
+import { Component, Input, OnInit, AfterViewInit, OnDestroy, ElementRef, ViewChild, Inject, signal } from '@angular/core';
 import { PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Subscription } from 'rxjs';
@@ -18,7 +18,7 @@ import * as mapboxgl from 'mapbox-gl';
     templateUrl: './map.component.html',
     styleUrls: ['./map.component.scss']
 })
-export class MapComponent implements AfterViewInit {
+export class MapComponent implements AfterViewInit, OnDestroy {
     @ViewChild('mapContainer', { static: false }) mapContainer!: ElementRef<HTMLDivElement>;
     map: any;
     accessToken: string = MAPBOX_ACCESS_TOKEN; // mapbox access token
@@ -113,5 +113,11 @@ export class MapComponent implements AfterViewInit {
                     this.snackBar.open('Failed to fetch location for selected coordinates. Please try again.', 'Close', { duration: 4000 });
                 }
             });
+    }
+
+     ngOnDestroy() {
+        if (this.actionsSub) {
+            this.actionsSub.unsubscribe();
+        }
     }
 }

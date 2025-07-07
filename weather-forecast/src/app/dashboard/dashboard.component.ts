@@ -1,7 +1,5 @@
-import { Component, OnDestroy, signal } from '@angular/core';
-import { Actions, ofType } from '@ngrx/effects';
-import { Subscription, combineLatest } from 'rxjs';
-import { citiesModal, unitType } from '../modals/cities.modal';
+import { Component, OnDestroy, Signal, signal } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { WeatherApiService } from '../weather-api.service';
 import { CommonModule } from '@angular/common';
 import { DayForecastComponent } from '../day-forecast/day-forecast.component';
@@ -11,7 +9,7 @@ import { selectSelectedUnitandCity } from '../state/app.selectors';
 import { SearchComponent } from '../search/search.component';
 import { DayForecast } from '../modals/weather.modal';
 import { MapComponent } from '../map/map.component';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -22,7 +20,8 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent implements OnDestroy {
-  currentConditions: DayForecast | null = null;
+  currentConditions = signal<DayForecast | null>(null);
+  headLine = signal<string>('');
   conditions: DayForecast[] = [];
   private actionsSub: Subscription;
   error: string | null = null;
@@ -41,22 +40,22 @@ export class DashboardComponent implements OnDestroy {
             next: data => {
               if (data && data.DailyForecasts && data.DailyForecasts.length > 0) {
                 this.conditions = data.DailyForecasts.map((day: any) => this.extractNecessaryInfo(day));
-                this.currentConditions = this.conditions[0];
+                this.currentConditions.set(this.conditions[0])
                 this.conditions = this.conditions.slice(1,4);
                 console.log(this.conditions);
                 console.log(this.currentConditions);
-                this.currentConditions.headLine = data.Headline?.Text || null; // Extract headLine if available
+                this.headLine.set(data.Headline?.Text || null); // Extract headLine if available
                 this.error = null;
               } else {
                 this.conditions = [];
-                this.currentConditions = null;
+                this.currentConditions.set(null)
                 this.error = 'No forecast data available.';
                 this.snackBar.open('No forecast data available.', 'Close', { duration: 4000 });
               }
             },
             error: err => {
               this.conditions = [];
-              this.currentConditions = null;
+              this.currentConditions.set(null);
               this.error = 'Failed to fetch forecast.';
               this.snackBar.open('Failed to fetch forecast.', 'Close', { duration: 4000 });
             }

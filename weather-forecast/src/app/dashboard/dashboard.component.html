@@ -1,16 +1,16 @@
 <div class="dashboard-wrapper">
-    <div [class.dashboard-content]="currentConditions">
+    <div [class.dashboard-content]="currentConditions()">
         <h1 class="dashboard-title">Weather Forecast Dashboard</h1>
-        <div class="dashboard-row" [class.dashboard-center]="!currentConditions">
+        <div class="dashboard-row" [class.dashboard-center]="!currentConditions()">
             <div class="search-content">
                 <app-search></app-search>
             </div>
         </div>
     </div>
-    <div *ngIf="currentConditions" class="forecast">
+    <div *ngIf="currentConditions()" class="forecast">
         <div class="cards">
-            <app-day-forecast [forecast]="currentConditions"
-                [next3days]="conditions"></app-day-forecast>
+            <app-day-forecast [forecast]="currentConditions()" [headLine]="headLine()"
+                 [next3days]="conditions"></app-day-forecast>
         </div>
         <div class="map-container">
             <app-map></app-map>

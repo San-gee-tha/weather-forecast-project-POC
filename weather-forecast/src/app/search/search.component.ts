@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -30,7 +30,7 @@ import { selectSelectedCity, selectSelectedUnit } from '../state/app.selectors';
   templateUrl: './search.component.html',
   styleUrl: './search.component.scss'
 })
-export class SearchComponent {
+export class SearchComponent implements OnDestroy {
   unitType = unitType;
   city = new FormControl('', { nonNullable: true });
   unitToggle = new FormControl<unitType>(unitType.IMPERIAL, { nonNullable: true });
@@ -38,17 +38,18 @@ export class SearchComponent {
   noResultsFound: boolean = false;
   error: string | null = null;
 
-  // @Output() citySelected = new EventEmitter<{ city: citiesModal, unit: unitType }>();
+  private citySub: any;
+  private unitSub: any;
+  private cityValueChangesSub: any;
 
   constructor(private weatherApiService: WeatherApiService, private store: Store) {
-    // Listen for city updates from the store and update the form control
-    this.store.select(selectSelectedCity).subscribe(city => {
+    this.citySub = this.store.select(selectSelectedCity).subscribe(city => {
       if (city && city.name) {
         this.city.setValue(city.name, { emitEvent: false });
       }
     });
 
-    this.store.select(selectSelectedUnit).subscribe(unit => {
+    this.unitSub = this.store.select(selectSelectedUnit).subscribe(unit => {
       if (unit) {
         this.unitToggle.setValue(unit, { emitEvent: false });
       }
@@ -63,25 +64,25 @@ export class SearchComponent {
   }
 
   ngOnInit() {
-    this.city.valueChanges
+    this.cityValueChangesSub = this.city.valueChanges
       .pipe(
         debounceTime(300),
         distinctUntilChanged(),
         filter(value => { // if value is empty clear cities fetched
-            if (value === '') {
-              this.citiesFetched = [];
-              this.error = null;
-              this.noResultsFound = false;
-              return false;
-            }
-            return true;
-          })
+          if (value === '') {
+            this.citiesFetched = [];
+            this.error = null;
+            this.noResultsFound = false;
+            return false;
+          }
+          return true;
+        })
       )
       .subscribe(value => {
-        this.getCity(value);
+        if (typeof (value) === 'string')
+          this.getCity(value);
       });
   }
-
 
   getCity(city: string) {
     this.weatherApiService.getCity(city).subscribe({
@@ -112,5 +113,11 @@ export class SearchComponent {
   updateUnit(event: any) {
     this.unitToggle.setValue(event.checked ? unitType.IMPERIAL : unitType.METRIC);
     this.store.dispatch(updateUnit({ unit: this.unitToggle.value }));
+  }
+
+    ngOnDestroy() {
+    if (this.citySub) this.citySub.unsubscribe();
+    if (this.unitSub) this.unitSub.unsubscribe();
+    if (this.cityValueChangesSub) this.cityValueChangesSub.unsubscribe();
   }
 }

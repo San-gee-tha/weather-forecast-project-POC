@@ -1,9 +1,9 @@
-import { Component, Input, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, ElementRef, AfterViewInit, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DayForecast } from '../modals/weather.modal';
 import { Store } from '@ngrx/store';
 import { selectSelectedCity } from '../state/app.selectors';
-import { citiesModal, dateModal } from '../modals/cities.modal';
+import {  dateModal } from '../modals/cities.modal';
 import { fetchDateAndDay } from '../utils';
 import { MatIconModule } from '@angular/material/icon';
 import Chart from 'chart.js/auto';
@@ -15,22 +15,24 @@ import Chart from 'chart.js/auto';
     templateUrl: './day-forecast.component.html',
     styleUrls: ['./day-forecast.component.scss']
 })
-export class DayForecastComponent implements OnInit, AfterViewInit {
+export class DayForecastComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input() forecast: DayForecast | null = null;
     @Input() next3days: DayForecast[] = [];
-    cityName: string | null = null;
-    date: dateModal | null = null; // Initialize date as null
+    @Input() headLine : string = '';
+    cityName = signal<string | null>(null);
+    date = signal<dateModal | null>(null);
     @ViewChild('tempChart') tempChartRef!: ElementRef<HTMLCanvasElement>;
     chart: Chart | null = null;
 
+    private citySub: any;
     constructor(private store: Store) { }
 
     ngOnInit() {
         if (this.forecast) {
-            this.store.select(selectSelectedCity).subscribe(city => {
-                this.cityName = city ? city.name : null;
+            this.citySub = this.store.select(selectSelectedCity).subscribe(city => {
+                this.cityName.set(city ? city.name : null);
             });
-            this.date = fetchDateAndDay(this.forecast?.date ?? '');
+            this.date.set(fetchDateAndDay(this.forecast?.date ?? ''))
         }
     }
 
@@ -114,5 +116,12 @@ export class DayForecastComponent implements OnInit, AfterViewInit {
                 });
             }
         }, 0);
+    }
+
+    ngOnDestroy() {
+        if (this.citySub) this.citySub.unsubscribe();
+        if (this.chart) {
+            this.chart.destroy();
+        }
     }
 }

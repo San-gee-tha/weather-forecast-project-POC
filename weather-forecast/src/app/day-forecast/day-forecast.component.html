@@ -1,11 +1,11 @@
 <div class="forcast-wrapper">
-    @if(date){
+    @if(date()){
     <div class="mat-elevation-z4 forecast-container" #curentDayForecast>
-        <div class="day-text">{{date.day}}</div>
-        <div class="date">{{date.month}} ,{{date.dayNumber}}</div>
-        <span class="city-text">{{cityName}}</span>
+        <div class="day-text">{{date()?.day}}</div>
+        <div class="date">{{date()?.month}} ,{{date()?.dayNumber}}</div>
+        <span class="city-text">{{cityName()}}</span>
         <div class="forecast-details">
-            <div> {{forecast?.headLine}}</div>
+            <div> {{headLine}}</div>
             <table>
                 <tr>
                     <td>MAX TEMP</td>

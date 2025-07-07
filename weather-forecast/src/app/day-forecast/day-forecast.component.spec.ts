@@ -5,7 +5,7 @@ import { selectSelectedCity } from '../state/app.selectors';
 import { citiesModal } from '../modals/cities.modal';
 import { mockForecast, mockNext3DaysForecast, mockSeleectedCity } from '../mock.data';
 
-describe('CurrentDayForecastComponent', () => {
+describe('DayForecastComponent', () => {
   let component: DayForecastComponent;
   let fixture: ComponentFixture<DayForecastComponent>;
   let store: MockStore;
@@ -42,9 +42,9 @@ describe('CurrentDayForecastComponent', () => {
 
   it('should invoke ngOnInit and set cityName and date', () => {
     component.ngOnInit();
-    component.cityName = null; // Simulate no city set in mock
-    expect(component.cityName).toBeNull(); // No city set in mock
-    expect(component.date).toEqual({
+    component.cityName.set(null); // Simulate no city set in mock
+    expect(component.cityName()).toBeNull(); // No city set in mock
+    expect(component.date()).toEqual({
       day: 'Saturday',
       dayNumber: 5,
       month: 'July',
