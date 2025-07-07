@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testin
 import { SearchComponent } from './search.component';
 import { WeatherApiService } from '../weather-api.service';
 import { Store } from '@ngrx/store';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { unitType, citiesModal } from '../modals/cities.modal';
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -41,6 +41,12 @@ describe('SearchComponent', () => {
     expect(weatherApiSpy.getCity).toHaveBeenCalledWith('City1');
     expect(component.citiesFetched.length).toBe(1);
     expect(component.citiesFetched[0].name).toBe('City1');
+  });
+
+  it('should set noResultsFound to true if no cities are fetched', () => {
+    weatherApiSpy.getCity.and.returnValue(throwError(() => new Error('No cities found')));
+    component.getCity('NonExistentCity');
+    expect(component.noResultsFound).toBeTrue();
   });
 
   it('should dispatch updateCity and clear citiesFetched on onSelectCity', () => {

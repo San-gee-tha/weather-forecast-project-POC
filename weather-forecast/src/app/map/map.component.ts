@@ -8,6 +8,8 @@ import { WeatherApiService } from '../weather-api.service';
 import { geoLocation } from '../modals/weather.modal';
 import { citiesModal } from '../modals/cities.modal';
 import { updateCity } from '../state/app.actions';
+import { MAPBOX_ACCESS_TOKEN } from '../api-keys';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'app-map',
@@ -18,30 +20,37 @@ import { updateCity } from '../state/app.actions';
 export class MapComponent implements AfterViewInit {
     @ViewChild('mapContainer', { static: false }) mapContainer!: ElementRef<HTMLDivElement>;
     map: any;
-    accessToken: string = 'pk.eyJ1IjoiZGlsbHBpeGVsIiwiYSI6ImNqM3A1YWV4czAwa3cyd3BmeWR4OTJ4NGEifQ.atNs-3fdoNghDcrdKwtIkA'
-    // accessToken: string = 'pk.eyJ1Ijoic2FuZ2VldGhhLW5hZ3UiLCJhIjoiY21jcWl6cTN6MGdwbDJpczRrOW1uZ2ZpbSJ9.y0tg-nPOYyqNcH6u_P2nAw'; // Replace with your Mapbox token mine
+    accessToken: string = MAPBOX_ACCESS_TOKEN; // mapbox access token
     isBrowser: boolean;
     private actionsSub: Subscription;
-    mapConfig = signal<geoLocation>({ latitude: 0, longitude: 0 })
+    mapConfig = signal<geoLocation>({ latitude: 0, longitude: 0 });
 
-
-
-    constructor(@Inject(PLATFORM_ID) private platformId: Object,
+    constructor(
+        @Inject(PLATFORM_ID) private platformId: Object,
         private weatherApiService: WeatherApiService,
-        private store: Store) {
+        private store: Store,
+        private snackBar: MatSnackBar
+    ) {
         this.isBrowser = isPlatformBrowser(this.platformId);
 
         // Listen for city changes and trigger API call
         this.actionsSub = this.store.select(selectSelectedUnitandCity).subscribe(action => {
             if (action.city) {
                 this.weatherApiService.getGeoLocation(action.city.key)
-                    .subscribe((geoData: any) => {
-                        if (geoData && geoData.GeoPosition.Latitude && geoData.GeoPosition.Longitude) {
-                            this.mapConfig.set({
-                                latitude: geoData.GeoPosition.Latitude,
-                                longitude: geoData.GeoPosition.Longitude,
-                            });
-                            this.updateOrInitMap();
+                    .subscribe({
+                        next: (geoData: any) => {
+                            if (geoData && geoData.GeoPosition.Latitude && geoData.GeoPosition.Longitude) {
+                                this.mapConfig.set({
+                                    latitude: geoData.GeoPosition.Latitude,
+                                    longitude: geoData.GeoPosition.Longitude,
+                                });
+                                debugger
+                                this.updateOrInitMap();
+                            }
+                        },
+                        error: (err) => {
+                            console.error('Failed to fetch geolocation:', err);
+                            this.snackBar.open('Failed to fetch geolocation. Please try again.', 'Close',);
                         }
                     })
             }
@@ -92,15 +101,21 @@ export class MapComponent implements AfterViewInit {
         console.log('Clicked coordinates:', lat, lon);
         this.mapConfig.set({ latitude: lat, longitude: lon });
         this.weatherApiService.getReverseGeoLocation(lat, lon)
-            .subscribe((geoData: any) => {
-                let city: citiesModal = {
-                    type: 'city',
-                    key: geoData.Key,
-                    name: geoData.LocalizedName,
-                    country: geoData.Country.LocalizedName,
-                    administrativeArea: geoData.AdministrativeArea.LocalizedName
+            .subscribe({
+                next: (geoData: any) => {
+                    let city: citiesModal = {
+                        type: 'city',
+                        key: geoData.Key,
+                        name: geoData.LocalizedName,
+                        country: geoData.Country.LocalizedName,
+                        administrativeArea: geoData.AdministrativeArea.LocalizedName
+                    };
+                    this.store.dispatch(updateCity({ city }));
+                },
+                error: (err) => {
+                    console.error('Failed to fetch reverse geolocation:', err);
+                    this.snackBar.open('Failed to fetch location for selected coordinates. Please try again.', 'Close', { duration: 4000 });
                 }
-                this.store.dispatch(updateCity({ city }));
-            })
+            });
     }
 }

@@ -11,6 +11,7 @@ import { selectSelectedUnitandCity } from '../state/app.selectors';
 import { SearchComponent } from '../search/search.component';
 import { DayForecast } from '../modals/weather.modal';
 import { MapComponent } from '../map/map.component';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -24,27 +25,40 @@ export class DashboardComponent implements OnDestroy {
   currentConditions: DayForecast | null = null;
   conditions: DayForecast[] = [];
   private actionsSub: Subscription;
+  error: string | null = null;
 
   constructor(
     private weatherApiService: WeatherApiService,
-    private store: Store
+    private store: Store,
+    private snackBar: MatSnackBar
   ) {
     // Listen for unit changes and trigger API call
     this.actionsSub = this.store.select(selectSelectedUnitandCity).subscribe(action => {
       if(action.city != null && action.unit != null) {
       // If a city is already selected, trigger API call with new unit
         this.weatherApiService.getForecastFor5days(action.city.key, action.unit)
-          .subscribe(data => {
-            if (data && data.DailyForecasts && data.DailyForecasts.length > 0) {
-              this.conditions = data.DailyForecasts.map((day: any) => this.extractNecessaryInfo(day));
-              this.currentConditions = this.conditions[0];
-              this.conditions = this.conditions.slice(1,4);
-              console.log(this.conditions);
-              console.log(this.currentConditions);
-              this.currentConditions.headLine = data.Headline?.Text || null; // Extract headLine if available
-            } else {
+          .subscribe({
+            next: data => {
+              if (data && data.DailyForecasts && data.DailyForecasts.length > 0) {
+                this.conditions = data.DailyForecasts.map((day: any) => this.extractNecessaryInfo(day));
+                this.currentConditions = this.conditions[0];
+                this.conditions = this.conditions.slice(1,4);
+                console.log(this.conditions);
+                console.log(this.currentConditions);
+                this.currentConditions.headLine = data.Headline?.Text || null; // Extract headLine if available
+                this.error = null;
+              } else {
+                this.conditions = [];
+                this.currentConditions = null;
+                this.error = 'No forecast data available.';
+                this.snackBar.open('No forecast data available.', 'Close', { duration: 4000 });
+              }
+            },
+            error: err => {
               this.conditions = [];
               this.currentConditions = null;
+              this.error = 'Failed to fetch forecast.';
+              this.snackBar.open('Failed to fetch forecast.', 'Close', { duration: 4000 });
             }
           });
         }

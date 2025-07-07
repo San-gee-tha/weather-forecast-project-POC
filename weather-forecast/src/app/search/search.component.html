@@ -8,6 +8,12 @@
                     {{ result.name }} ({{ result.administrativeArea }})
                 </mat-option>
             </ng-container>
+            <mat-option *ngIf="noResultsFound && !error" disabled>
+                No results found
+            </mat-option>
+            <mat-option *ngIf="error" disabled>
+                {{ error }}
+            </mat-option>
         </mat-autocomplete>
     </mat-form-field>
 

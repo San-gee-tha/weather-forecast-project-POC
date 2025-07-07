@@ -35,6 +35,8 @@ export class SearchComponent {
   city = new FormControl('', { nonNullable: true });
   unitToggle = new FormControl<unitType>(unitType.IMPERIAL, { nonNullable: true });
   citiesFetched: citiesModal[] = [];
+  noResultsFound: boolean = false;
+  error: string | null = null;
 
   // @Output() citySelected = new EventEmitter<{ city: citiesModal, unit: unitType }>();
 
@@ -68,6 +70,8 @@ export class SearchComponent {
         filter(value => { // if value is empty clear cities fetched
             if (value === '') {
               this.citiesFetched = [];
+              this.error = null;
+              this.noResultsFound = false;
               return false;
             }
             return true;
@@ -80,18 +84,25 @@ export class SearchComponent {
 
 
   getCity(city: string) {
-    this.weatherApiService.getCity(city).subscribe(res => {
-      console.log('City data:', res);
-      this.citiesFetched = res.map((item: any) => {
-        return {
-          key: item.Key,
-          name: item.LocalizedName,
-          country: item.Country.LocalizedName,
-          administrativeArea: item.AdministrativeArea.LocalizedName
-        } as citiesModal;
+    this.weatherApiService.getCity(city).subscribe({
+      next: res => {
+        this.citiesFetched = res.map((item: any) => {
+          return {
+            key: item.Key,
+            name: item.LocalizedName,
+            country: item.Country.LocalizedName,
+            administrativeArea: item.AdministrativeArea.LocalizedName
+          } as citiesModal;
+        });
+        this.noResultsFound = this.citiesFetched.length === 0;
+        this.error = null;
+      },
+      error: err => {
+        this.citiesFetched = [];
+        this.noResultsFound = true;
+        this.error = 'Error fetching cities';
       }
-      )
-    })
+    });
   }
 
   trackById(index: number, item: citiesModal) {

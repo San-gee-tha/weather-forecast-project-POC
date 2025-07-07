@@ -72,7 +72,7 @@ describe('ChatbotComponent', () => {
     component.processChatState('', undefined, true);
     setTimeout(() => {
       expect(storeSpy.dispatch).toHaveBeenCalled();
-      expect(component.chatState).toBe('restart');
+      expect(component.chatState).toBe('start');
       done();
     }, 1100);
   });

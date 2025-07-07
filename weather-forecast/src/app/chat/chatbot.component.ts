@@ -36,7 +36,6 @@ export class ChatbotComponent implements AfterViewInit, AfterViewChecked {
   ngOnInit() {
     // Initialize chat state or any other setup if needed
     this.chatState = 'start';
-    // this.chatData = { city: '', unit: unitType.METRIC };
     this.processChatState(''); // Start the chat flow
   }
   sendMessage(data?: any, type?: string) {
@@ -117,11 +116,13 @@ export class ChatbotComponent implements AfterViewInit, AfterViewChecked {
             }
             )
             this.addMessage('bot', 'Which city do you mean?', this.cityOptions);
+            this.chatState = 'chooseCity';
           } else {
             this.addMessage('bot', 'Sorry, I could not find any matching cities. Try again.');
+            this.addMessage('bot', 'Type a new city, to try again');
+            this.chatState = 'askCity';
           }
         });
-        this.chatState = 'chooseCity';
         break;
       case "chooseCity":
         if (cityObj) {
@@ -133,8 +134,6 @@ export class ChatbotComponent implements AfterViewInit, AfterViewChecked {
           this.addMessage('bot', `Got it! You want weather for ${cityObj.name}.`);
           this.addMessage('bot', 'Do you prefer Celsius or Fahrenheit?');
           this.chatState = 'askUnit';
-          // Dispatch updateCity to store
-          // this.store.dispatch(updateCity({ city: cityObj as citiesModal }));
         } else {
           this.addMessage('bot', 'Please select a city from the options.');
         }
@@ -174,15 +173,15 @@ export class ChatbotComponent implements AfterViewInit, AfterViewChecked {
     }
   }
 
+  // after fetching weather, update the chat state
   fetchWeather(city: citiesModal, unit: string) {
-    // TODO: Integrate with weather API and update chat with results
     setTimeout(() => {
-      this.addMessage('bot', 'updated weather in dashboard');
-      this.addMessage('bot', 'Type another city to check again, or say "restart".');
+      this.addMessage('bot', 'Type "restart" to look for another city.');
       this.chatState = 'restart';
-    }, 1000);
+    }, 3000);
   }
 
+  // Method to toggle the collapsed state
   toggleCollapse() {
     this.collapsed = !this.collapsed;
   }
