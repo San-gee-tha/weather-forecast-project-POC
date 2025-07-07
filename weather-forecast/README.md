@@ -1,5 +1,7 @@
 # Weather Forecast Angular Application
 
+# Demo url https://weather-forecast-poc.web.app
+
 ## Features
 - Client-side rendered Angular 19+ application
 - Weather forecast, city search, map integration (Mapbox), and chatbot
