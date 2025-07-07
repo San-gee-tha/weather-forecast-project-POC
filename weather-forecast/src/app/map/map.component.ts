@@ -10,6 +10,7 @@ import { citiesModal } from '../modals/cities.modal';
 import { updateCity } from '../state/app.actions';
 import { MAPBOX_ACCESS_TOKEN } from '../api-keys';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import * as mapboxgl from 'mapbox-gl';
 
 @Component({
     selector: 'app-map',
@@ -44,7 +45,6 @@ export class MapComponent implements AfterViewInit {
                                     latitude: geoData.GeoPosition.Latitude,
                                     longitude: geoData.GeoPosition.Longitude,
                                 });
-                                debugger
                                 this.updateOrInitMap();
                             }
                         },
@@ -78,7 +78,6 @@ export class MapComponent implements AfterViewInit {
                 this.map.setCenter(coords);
                 this.map.setZoom(5); // Adjust zoom level as needed
             } else {
-                import('mapbox-gl').then((mapboxgl) => {
                     this.map = new mapboxgl.Map({
                         accessToken: this.accessToken,
                         container: this.mapContainer.nativeElement,
@@ -90,9 +89,6 @@ export class MapComponent implements AfterViewInit {
                         const lngLat = e.lngLat;
                         this.fetchGeoLocationFromCoords(lngLat.lat, lngLat.lng);
                     });
-                });
-
-
             }
         }
     }
